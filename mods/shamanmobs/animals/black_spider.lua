@@ -31,3 +31,11 @@ shamanmobs:register_mob("shamanmobs:black_spider", {
 		punch_end = 18,
 	}
 })
+
+minetest.register_craft({
+	output = '"shamanmanifestingeggs:black_spider"',
+	recipe = {
+		{'"juju:blackjuju"','"juju:blackjuju"','"juju:blackjuju"','"juju:blackjuju"'},
+		{'"juju:blackjuju"','"juju:blackjuju"','"juju:blackjuju"','"juju:blackjuju"'},
+	}
+})
