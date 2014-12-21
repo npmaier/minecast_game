@@ -81,16 +81,13 @@ end
 function cf.save()
 	print("[CaptureTheFlag] Saving data...")
 	local file = io.open(minetest.get_worldpath().."/ctf.txt", "w")
-	if file then
 		file:write(minetest.serialize({
 			teams = cf.teams,
 			players = cf.players,
 			diplo = cf.diplo.diplo
 		}))
 		file:close()
-	end
 end
-
 -- Get or add a team
 function cf.team(name) -- get or add a team
 	if type(name) == "table" then
@@ -336,7 +333,7 @@ cf.clean_player_lists()
 -- Load Modules
 dofile(minetest.get_modpath("shamanloyalty").."/gui.lua")
 dofile(minetest.get_modpath("shamanloyalty").."/cli.lua")
-dofile(minetest.get_modpath("shamanloyalty").."/flag.lua")
+--dofile(minetest.get_modpath("shamanloyalty").."/flag.lua")
 dofile(minetest.get_modpath("shamanloyalty").."/unattached.lua")
 -- Load other
 cf.collect_claimed()

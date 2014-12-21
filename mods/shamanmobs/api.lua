@@ -217,8 +217,12 @@ function shamanmobs:register_mob(name, def)
 			
 			if self.type == "monster" and minetest.setting_getbool("enable_damage") then
 				for _,player in pairs(minetest.get_connected_players()) do
+					name = player:get_player_name()
 					local c = self.object:get_entity_name()
-					local l = cf.player(player:get_player_name()).team
+					if cf and cf.players and cf.players[name] and cf.players[name].team then
+--and cf.players and cf.players[player:get_player_name()] and cf.players[player:get_player_name()] then
+						local l = cf.player(player:get_player_name()).team
+					end
 					if l ~= "Pink"  and c == "shamanmobs:chicken" or l ~= "Pink" and c == "shamanmobs:cow" or l ~= "Pink" and c == "shamanmobs:pig" or l ~= "Pink" and c == "shamanmobs:nyan_cat" or l ~= "Pink" and c == "shamanmobs:rabbit" or l ~= "Pink" and c == "shamanmobs:sheep" or l ~= "Black" and c == "shamanmobs:black_spider" or l ~= "Green" and c == "shamanmobs:green_saproling" or l ~= "Red" and c == "shamanmobs:red_dragon" or l ~= "White" and c == "shamanmobs:white_rhino" then
 						local s = self.object:getpos()
 						local p = player:getpos()
