@@ -1,0 +1,32 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2014.12.20.20.11.34;	author nate;	state Exp;
+branches;
+next	;
+
+
+desc
+@:q
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@mg_flags = dungeons
+mgv6_spflags = biomeblend, jungles
+
+movement_liquid_sink = 25
+movement_liquid_fluidity = 0.8
+movement_liquid_fluidity_smooth = 2
+
+ctf_team = {Red, Green, White, Black, Pink}
+@

@@ -1,4 +1,4 @@
-SPAWNING: [true --or-- false]
+-- SPAWNING: [true --or-- false]
 -- 
 local CHICKEN_SPAWN = true
 local COW_SPAWN = true

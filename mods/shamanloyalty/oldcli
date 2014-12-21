@@ -1,0 +1,286 @@
+-- CLI stuff                                                      -- CLI stuff
+minetest.register_privilege("team",{                              minetest.register_privilege("team",{
+	description = "Team manager",                             	description = "Team manager",
+})                                                                })
+                                                                  
+local function team_console_help(name)                            local function team_console_help(name)
+	minetest.chat_send_player(name,"Try:",false)              	minetest.chat_send_player(name,"Try:",false)
+	minetest.chat_send_player(name,"/team - show team panel   	minetest.chat_send_player(name,"/team - show team panel",
+	minetest.chat_send_player(name,"/team all - list all te   	minetest.chat_send_player(name,"/team all - list all team
+	minetest.chat_send_player(name,"/team name - show detai   	minetest.chat_send_player(name,"/team name - show details
+	minetest.chat_send_player(name,"/team player name - get   	minetest.chat_send_player(name,"/team player name - get w
+	minetest.chat_send_player(name,"/team add name - add a    	minetest.chat_send_player(name,"/team add name - add a te
+	minetest.chat_send_player(name,"/team join player team    	minetest.chat_send_player(name,"/team join player team - 
+end                                                               end
+                                                                  
+minetest.register_chatcommand("team", {                           minetest.register_chatcommand("team", {
+	description = "Open the team console, or run team comma   	description = "Open the team console, or run team command
+	func = function(name, param)                              	func = function(name, param)
+		local test = string.match(param,"^player ([%a%d   		local test = string.match(param,"^player ([%a%d_]
+		local create = string.match(param,"^add ([%a%d_   		local create = string.match(param,"^add ([%a%d_]+
+		local tplayer,tteam = string.match(param,"^join   		local tplayer,tteam = string.match(param,"^join (
+		if test then                                      		if test then
+			print("is a player request "..test)       			print("is a player request "..test)
+				                                  				
+			if cf.player(test) then                   			if cf.player(test) then
+				if cf.player(test).team then      				if cf.player(test).team then
+					if cf.player(test).auth   					if cf.player(test).auth t
+						minetest.chat_s   						minetest.chat_sen
+					else                      					else
+						minetest.chat_s   						minetest.chat_sen
+					end                       					end
+				else                              				else
+					minetest.chat_send_play   					minetest.chat_send_player
+				end                               				end
+			else                                      			else
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name,"P
+			end                                       			end
+		elseif create then                                		elseif create then
+			local privs = minetest.get_player_privs   			local privs = minetest.get_player_privs(n
+			if privs and privs.team == true then      			if privs and privs.team == true then
+				if (                              				if (
+					string.match(create,"([   					string.match(create,"([%a
+					and cf.team({name=creat   					and cf.team({name=create,
+					and create ~= ""          					and create ~= ""
+					and create ~= nil         					and create ~= nil
+				) then                            				) then
+					minetest.chat_send_play   					minetest.chat_send_player
+				else                              				else
+					minetest.chat_send_play   					minetest.chat_send_player
+				end                               				end
+			else                                      			else
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name, "
+			end                                       			end
+		elseif param == "all" then                        		elseif param == "all" then
+			minetest.chat_send_player(name, "Teams:   			minetest.chat_send_player(name, "Teams:",
+			for k,v in pairs(cf.teams) do             			for k,v in pairs(cf.teams) do
+				if v and v.players then           				if v and v.players then
+					local numItems = 0        					local numItems = 0
+					for k,v in pairs(v.play   					for k,v in pairs(v.player
+						numItems = numI   						numItems = numIte
+					end                       					end
+					local numItems2 = 0       					local numItems2 = 0
+					for k,v in pairs(v.flag   					for k,v in pairs(v.flags)
+						numItems2 = num   						numItems2 = numIt
+					end                       					end
+					minetest.chat_send_play   					minetest.chat_send_player
+				end                               				end
+			end                                       			end 
+		elseif cf.team(param) then                        		elseif cf.team(param) then
+			minetest.chat_send_player(name,"Team ".   			minetest.chat_send_player(name,"Team "..p
+			local count = 0                           			local count = 0
+			for _,value in pairs(cf.team(param).pla   			for _,value in pairs(cf.team(param).playe
+				count = count + 1                 				count = count + 1
+				if value.aut == true then         				if value.aut == true then
+					minetest.chat_send_play   					minetest.chat_send_player
+				else                              				else
+					minetest.chat_send_play   					minetest.chat_send_player
+				end                               				end
+			end                                       			end
+		elseif tplayer and tteam then                     		elseif tplayer and tteam then
+			minetest.chat_send_player(name,"joining   			minetest.chat_send_player(name,"joining '
+			local privs = minetest.get_player_privs   			local privs = minetest.get_player_privs(n
+			if privs and privs.team == true then      			if privs and privs.team == true then
+				local player = cf.player(tplaye   				local player = cf.player(tplayer)
+				                                  				
+				if not player then                				if not player then
+					player = {name=tplayer}   					player = {name=tplayer}
+				end                               				end
+			                                          			
+				if cf.add_user(tteam,tplayer) =   				if cf.add_user(tteam,tplayer) == 
+					minetest.chat_send_all(   					minetest.chat_send_all(tp
+				end                               				end
+			else                                      			else
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name, "
+			end                                       			end
+		elseif param=="help" then                         		elseif param=="help" then
+			team_console_help(name)                   			team_console_help(name)
+		else                                              		else
+			if param~="" and param~= nil then         			if param~="" and param~= nil then
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name,"'
+				team_console_help(name)           				team_console_help(name)
+			end                                       			end
+			if (                                      			if ( 
+				cf and                            				cf and
+				cf.players and                    				cf.players and
+				cf.players[name] and              				cf.players[name] and
+				cf.players[name].team and         				cf.players[name].team and
+				cf.setting("gui")                 				cf.setting("gui")
+			) then                                    			) then
+				if cf.setting("team_gui_initial   				if cf.setting("team_gui_initial")
+					cf.gui.team_board(name,   					cf.gui.team_board(name,cf
+				elseif cf.setting("team_gui_ini   				elseif cf.setting("team_gui_initi
+					cf.gui.team_flags(name,   					cf.gui.team_flags(name,cf
+				elseif cf.setting("team_gui_ini   				elseif cf.setting("team_gui_initi
+					cf.gui.team_dip(name,cf   					cf.gui.team_dip(name,cf.p
+				elseif cf.setting("team_gui_ini   				elseif cf.setting("team_gui_initi
+					cf.gui.team_settings(na   					cf.gui.team_settings(name
+				elseif cf.setting("news_gui") t   				elseif cf.setting("news_gui") the
+					cf.gui.team_board(name,   					cf.gui.team_board(name,cf
+				end                               				end
+			end                                       			end
+		end                                               		end
+	end,                                                      	end,
+})                                                                })
+                                                                  
+minetest.register_chatcommand("join", {                           minetest.register_chatcommand("join", {
+	params = "team name",                                     	params = "team name",
+	description = "Add to team",                              	description = "Add to team",
+	func = function(name, param)                              	func = function(name, param)
+		local player = cf.player(name)                    		local player = cf.player(name)
+		                                                  		
+		if not player then                                		if not player then
+			player = {name=name}                      			player = {name=name}
+		end                                               		end
+		                                                  		
+		if not cf.setting("players_can_change_team") an   		if not cf.setting("players_can_change_team") and 
+			minetest.chat_send_player(name,"You are   			minetest.chat_send_player(name,"You are n
+		end                                               		end
+                                                                  
+		if cf.add_user(param,player) == true then         		if cf.add_user(param,player) == true then
+			minetest.chat_send_all(name.." has join   			minetest.chat_send_all(name.." has joined
+		end                                               		end
+	end,                                                      	end,
+})                                                                })
+minetest.register_chatcommand("list_teams", {                     minetest.register_chatcommand("list_teams", {
+	params = "",                                              	params = "",
+	description = "List all available teams",                 	description = "List all available teams",
+	func = function(name, param)                              	func = function(name, param)
+		minetest.chat_send_player(name, "This command w   		minetest.chat_send_player(name, "This command wil
+		minetest.chat_send_player(name, "Teams:")         		minetest.chat_send_player(name, "Teams:")
+		for k,v in pairs(cf.teams) do                     		for k,v in pairs(cf.teams) do
+			if v and v.players then                   			if v and v.players then
+				local numItems = 0                				local numItems = 0
+				for k,v in pairs(v.players) do    				for k,v in pairs(v.players) do
+				    numItems = numItems + 1       				    numItems = numItems + 1
+				end                               				end
+				local numItems2 = 0               				local numItems2 = 0
+				for k,v in pairs(v.flags) do      				for k,v in pairs(v.flags) do
+				    numItems2 = numItems2 + 1     				    numItems2 = numItems2 + 1
+				end                               				end
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name, "
+			end                                       			end
+		end                                               		end                                              
+	end,                                                      	end,
+})                                                                })
+                                                                  
+minetest.register_chatcommand("ateam", {                          minetest.register_chatcommand("ateam", {
+	params = "team name",                                     	params = "team name",
+	description = "Create a team",                            	description = "Create a team",
+	privs = {team=true},                                      	privs = {team=true},
+	func = function(name, param)                              	func = function(name, param)
+		minetest.chat_send_player(name, "This command w   		minetest.chat_send_player(name, "This command wil
+		if string.match(param,"([%a%b_]-)") and cf.team   		if string.match(param,"([%a%b_]-)") and cf.team({
+			minetest.chat_send_player(name, "Added    			minetest.chat_send_player(name, "Added te
+		else                                              		else
+			minetest.chat_send_player(name, "Error    			minetest.chat_send_player(name, "Error ad
+		end                                               		end
+	end,                                                      	end,
+})                                                                })
+                                                                  
+minetest.register_chatcommand("ctf", {                            minetest.register_chatcommand("ctf", {
+	description = "Do admin cleaning stuff",                  	description = "Do admin cleaning stuff",
+	privs = {team=true},                                      	privs = {team=true},
+	func = function(name, param)                              	func = function(name, param)
+		cf.clean_flags()                                  		cf.clean_flags()
+		cf.clean_player_lists()                           		cf.clean_player_lists()
+		cf.collect_claimed()                              		cf.collect_claimed()
+	end,                                                      	end,
+})                                                                })
+                                                                  
+minetest.register_chatcommand("reload_ctf", {                     minetest.register_chatcommand("reload_ctf", {
+	description = "reload the ctf main frame and get settin   	description = "reload the ctf main frame and get settings
+	privs = {team=true},                                      	privs = {team=true},
+	func = function(name, param)                              	func = function(name, param)
+		cf.save()                                         		cf.save()
+		cf.init()                                         		cf.init()
+	end,                                                      	end,
+})                                                                })
+                                                                  
+minetest.register_chatcommand("team_owner", {                     minetest.register_chatcommand("team_owner", {
+	params = "player name",                                   	params = "player name",
+	description = "Make player team owner",                   	description = "Make player team owner",
+	privs = {team=true},                                      	privs = {team=true},
+	func = function(name, param)                              	func = function(name, param)
+		if cf and cf.players and cf.player(param) and c   		if cf and cf.players and cf.player(param) and cf.
+			if cf.player(param).auth == true then     			if cf.player(param).auth == true then
+				cf.player(param).auth = false     				cf.player(param).auth = false
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name, p
+			else                                      			else
+				cf.player(param).auth = true      				cf.player(param).auth = true
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name, p
+			end                                       			end
+			cf.save()                                 			cf.save()
+		else                                              		else
+			minetest.chat_send_player(name, "Unable   			minetest.chat_send_player(name, "Unable t
+		end                                               		end
+	end,                                                      	end,
+})                                                                })
+                                                                  
+minetest.register_chatcommand("all", {                            minetest.register_chatcommand("all", {
+	params = "msg",                                           	params = "msg",
+	description = "Send a message on the global channel",     	description = "Send a message on the global channel",
+	func = function(name, param)                              	func = function(name, param)
+		if not cf.setting("global_channel") then          		if not cf.setting("global_channel") then
+			minetest.chat_send_player(name,"The glo   			minetest.chat_send_player(name,"The globa
+			return                                    			return
+		end                                               		end
+                                                                  
+		if cf.player(name) and cf.player(name).team the   		if cf.player(name) and cf.player(name).team then
+			minetest.chat_send_all(cf.player(name).   			minetest.chat_send_all(cf.player(name).te
+		else                                              		else
+			minetest.chat_send_all("GLOBAL <"..name   			minetest.chat_send_all("GLOBAL <"..name..
+		end                                               		end
+                                                                  
+	end,                                                      	end,
+})                                                                })
+                                                                  
+minetest.register_chatcommand("post", {                           minetest.register_chatcommand("post", {
+	params = "message",                                       	params = "message",
+	description = "Post a message on your team's message bo   	description = "Post a message on your team's message boar
+	func = function(name, param)                              	func = function(name, param)
+                                                                  
+		if cf and cf.players and cf.players[name] and c   		if cf and cf.players and cf.players[name] and cf.
+			if not cf.player(name).auth then          			if not cf.player(name).auth then
+				minetest.chat_send_player(name,   				minetest.chat_send_player(name, "
+			end                                       			end
+                                                                  
+			if not cf.teams[cf.players[name].team].   			if not cf.teams[cf.players[name].team].lo
+				cf.teams[cf.players[name].team]   				cf.teams[cf.players[name].team].l
+			end                                       			end
+                                                                  
+			table.insert(cf.teams[cf.players[name].   			table.insert(cf.teams[cf.players[name].te
+                                                                  
+			minetest.chat_send_player(name, "Posted   			minetest.chat_send_player(name, "Posted: 
+		else                                              		else
+			minetest.chat_send_player(name, "Could    			minetest.chat_send_player(name, "Could no
+		end                                               		end
+	end,                                                      	end,
+})                                                                })
+                                                                  
+-- Chat plus stuff                                                -- Chat plus stuff
+if chatplus then                                                  if chatplus then
+	chatplus.register_handler(function(from,to,msg)           	chatplus.register_handler(function(from,to,msg)
+		if not cf.setting("team_channel") then            		if not cf.setting("team_channel") then
+			return nil                                			return nil
+		end                                               		end
+                                                                  
+		local fromp = cf.player(from)                     		local fromp = cf.player(from)
+		local top = cf.player(to)                         		local top = cf.player(to)
+                                                                  
+		if not fromp then                                 		if not fromp then
+			if not cf.setting("global_channel") the   			if not cf.setting("global_channel") then
+				minetest.chat_send_player(from,   				minetest.chat_send_player(from,"Y
+			else                                      			else
+				minetest.chat_send_player(to,"G   				minetest.chat_send_player(to,"GLO
+			end                                       			end
+			return false                              			return false
+		end                                               		end
+		                                                  		
+		if not top then                                   		if not top then
+			return false                              			return false
+		end                                               		end
+                                                                  
+		return (fromp.team == top.team)                   		return (fromp.team == top.team)
+	end)                                                      	end)
+end                                                               end

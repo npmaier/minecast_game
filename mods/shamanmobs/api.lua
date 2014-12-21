@@ -217,9 +217,9 @@ function shamanmobs:register_mob(name, def)
 			
 			if self.type == "monster" and minetest.setting_getbool("enable_damage") then
 				for _,player in pairs(minetest.get_connected_players()) do
-					local w = player:get_player_name()
 					local c = self.object:get_entity_name()
-					if w ~= "PinkShaman" and c == "shamanmobs:chicken_block" or w ~= "PinkShaman" and c == "shamanmobs:chicken" or w ~= "PinkShaman" and c == "shamanmobs:cow" or w ~= "PinkShaman" and c == "shamanmobs:cow_block" or w ~= "PinkShaman" and c == "shamanmobs:pig_block" or w ~= "PinkShaman" and c == "shamanmobs:pig" or w ~= "PinkShaman" and c == "shamanmobs:rabbit_block" or w ~= "PinkShaman" and c == "shamanmobs:rabbit" or w ~= "PinkShaman" and c == "shamanmobs:sheep_block" or w ~= "PinkShaman" and c == "shamanmobs:sheep" or w ~= "PinkShaman" and c == "shamanmobs:nyan_cat" or w ~= "PinkShaman" and c == "shamanmobs:nyan_cat_block" or w ~= "PinkShaman"  and c == "shamanmobs:pink_swarm" or w == "BlackShaman" and c ~= "shamanmobs:black_spider" or w == "GreenShaman" and c ~= "shamanmobs:green_saproling" or w == "RedShaman" and c ~= "shamanmobs:red_dragon" or w =="WhiteShaman" and c ~= "shamanmobs:white_rhino" then
+					local l = cf.player(player:get_player_name()).team
+					if l ~= "Pink"  and c == "shamanmobs:chicken" or l ~= "Pink" and c == "shamanmobs:cow" or l ~= "Pink" and c == "shamanmobs:pig" or l ~= "Pink" and c == "shamanmobs:nyan_cat" or l ~= "Pink" and c == "shamanmobs:rabbit" or l ~= "Pink" and c == "shamanmobs:sheep" or l ~= "Black" and c == "shamanmobs:black_spider" or l ~= "Green" and c == "shamanmobs:green_saproling" or l ~= "Red" and c == "shamanmobs:red_dragon" or l ~= "White" and c == "shamanmobs:white_rhino" then
 						local s = self.object:getpos()
 						local p = player:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5

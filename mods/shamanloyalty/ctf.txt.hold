@@ -1,0 +1,1 @@
+return {["players"] = {}, ["teams"] = {["unattached"] = {["players"] = {}, ["flags"] = {}, ["data"] = {["name"] = "unattached", ["add_team"] = true}}}, ["diplo"] = {}}
